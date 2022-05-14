@@ -6,6 +6,7 @@ O objetivo deste desafio é compreender os seus conhecimentos e experiência ana
 3. Criação de todos os artefatos necessários para carregar os arquivos para o banco criado;
 4. Desenvolvimento de SCRIPT para análise de dados;
 5. (opcional) Criar um relatório em qualquer ferramenta de visualização de dados.
+<br />
 
 # 1. Fazer a modelagem conceitual dos dados
 
@@ -14,16 +15,19 @@ Para resolução do modelo conceitual foi utilizado o BR modelo e desconsiderado
 ![Modelo Conceitual](https://user-images.githubusercontent.com/97460254/168407159-f90697f5-b9fe-4591-9b93-f11aa1cf2778.PNG)
 
 ![Modelo Power Query](https://user-images.githubusercontent.com/97460254/168407467-52ea3a59-eb01-44d8-b641-1f89f586748a.jpeg)
+<br />
 
 # 2. Criação da infraestrutura necessária
 
 Para a parte de infraestrutura foi utilizado o banco de dados SQL server hospedado em nuvem (Azure). Para o manuseio do mesmo foi utilizado o Microsoft SQL Server Management Studio.
 
 ![image](https://user-images.githubusercontent.com/97460254/168407847-94845d44-fad2-4e32-b9d0-d838c72b89ac.png)
+<br />
 
 # 3. Criação de todos os artefatos necessários para carregar os arquivos para o banco criado
 
-A importação dos arquivos .CSV foi feita manualmente atravez do Microsoft SQL Server Management Studio.
+A importação dos arquivos .CSV foi feita manualmente atravez do Microsoft SQL Server Management Studio. <br />  <br />
+**ATENÇÂO:** Para importação do Dataset Person.Person.csv 2 colunas (AdditionalContactInfo e Demographics) tiveram de ser removidas para carregamento no SQL server pois conflitavam fazendo com que todos os dados, do Dataset, fossem carregados como nulos para o banco de dados.
 
 | DataSet |
 |:-------:|
@@ -35,14 +39,17 @@ A importação dos arquivos .CSV foi feita manualmente atravez do Microsoft SQL 
 |Sales.SpecialOfferProduct|
 
 ![image](https://user-images.githubusercontent.com/97460254/168408124-ec9f5634-95fd-4db9-abe1-4dcc3cb84e4f.png)
+<br />
 
 # 4. Desenvolvimento de SCRIPT para análise de dados;
 
 -	Escreva uma query que retorna a quantidade de linhas na tabela Sales.SalesOrderDetail pelo campo SalesOrderID, desde que tenham pelo menos três linhas de detalhes.
-´´´ 
-- select SalesOrderID, count(SalesOrderID) as Contagem from [Sales.SalesOrderDetail]
+ 
+```SQL 
+select SalesOrderID, count(SalesOrderID) as Contagem from [Sales.SalesOrderDetail]
 group by SalesOrderID
 having count(SalesOrderID) >=3;
+```
 
 |Sales Order ID|Count|
 |:-------:|:-------:|
@@ -57,13 +64,17 @@ having count(SalesOrderID) >=3;
 |61232|	10|
 |65866|	5|
 
+<br />
+
 - Escreva uma query que ligue as tabelas Sales.SalesOrderDetail, Sales.SpecialOfferProduct e Production.Product e retorne os 3 produtos (Name) mais vendidos (pela soma de OrderQty), agrupados pelo número de dias para manufatura (DaysToManufacture).
 
-- select top 3 p.Name, p.DaysToManufacture , SUM(cast(sod.OrderQty as int)) as qnt from [Sales.SalesOrderDetail] sod
+```SQL
+select top 3 p.Name, p.DaysToManufacture , SUM(cast(sod.OrderQty as int)) as qnt from [Sales.SalesOrderDetail] sod
 left join [Sales.SpecialOfferProduct] sop on sod.SpecialOfferID = sop.SpecialOfferID
 left join [Production.Product] p on sop.ProductID = p.ProductID
 group by p.Name, p.DaysToManufacture
 order by SUM(cast(sod.OrderQty as int)) desc;
+```
 
 |Name|Days To Manufactory|Qnt|
 |:----:|:----:|:----:|
@@ -71,12 +82,16 @@ order by SUM(cast(sod.OrderQty as int)) desc;
 |Full-Finger Gloves, L	| 0 |	270244|
 |Women's Tights, S	| 0 |	270159|
 
+<br />
+
 - Escreva uma query ligando as tabelas Person.Person, Sales.Customer e Sales.SalesOrderHeader de forma a obter uma lista de nomes de clientes e uma contagem de pedidos efetuados.
-- select p.FirstName+ ' ' +p.LastName as Nome, COUNT(soh.CustomerID) as Pedidos from [Sales.SalesOrderHeader] soh
+```SQL
+select p.FirstName+ ' ' +p.LastName as Nome, COUNT(soh.CustomerID) as Pedidos from [Sales.SalesOrderHeader] soh
 left join [Sales.Customer] c on soh.CustomerID = c.CustomerID
 left join [Person.Person] p on c.PersonID = p.BusinessEntityID
 group by p.FirstName, p.LastName
 order by Pedidos desc;
+```
 
 |Name|Order|
 |:---:|:---:|
@@ -91,12 +106,16 @@ order by Pedidos desc;
 |Jennifer Simmons|	27|
 |Hailey Patterson|	27|
 
+<br />
+
 - Escreva uma query usando as tabelas Sales.SalesOrderHeader, Sales.SalesOrderDetail e Production.Product, de forma a obter a soma total de produtos (OrderQty) por ProductID e OrderDate.
-- select p.ProductID, p.name, soh.OrderDate, sum(cast(sod.OrderQty as int)) as Qnt from [Sales.SalesOrderDetail] sod
+```SQL
+select p.ProductID, p.name, soh.OrderDate, sum(cast(sod.OrderQty as int)) as Qnt from [Sales.SalesOrderDetail] sod
 left join [Sales.SalesOrderHeader] soh on sod.SalesOrderID=soh.SalesOrderID
 left join [Production.Product] p on sod.ProductID=p.ProductID
 group by p.ProductID, p.name, soh.OrderDate
 order by sum(cast(sod.OrderQty as int)) desc;
+```
 
 |Product ID|Product|Order Date|Order|
 |:---:|:---:|:---:|:---:|
@@ -111,13 +130,16 @@ order by sum(cast(sod.OrderQty as int)) desc;
 |715|	Long-Sleeve Logo Jersey, L	|2013-06-30 00:00:00.000	|406|
 |876|	Hitch Rack - 4-Bike	|2013-07-31 00:00:00.000	|397|
 
+<br />
 
 - Escreva uma query mostrando os campos SalesOrderID, OrderDate e TotalDue da tabela Sales.SalesOrderHeader. Obtenha apenas as linhas onde a ordem tenha sido feita durante o mês de setembro/2011 e o total devido esteja acima de 1.000. Ordene pelo total devido decrescente.
 
-- select SalesOrderID, OrderDate, cast(replace(TotalDue, ',', '.') as float) as TotalDue from [Sales.SalesOrderHeader]
+```SQL
+select SalesOrderID, OrderDate, cast(replace(TotalDue, ',', '.') as float) as TotalDue from [Sales.SalesOrderHeader]
 where OrderDate between '20111001' and '20111030'
 and cast(replace(TotalDue, ',', '.') as float) >= 1000
 order by OrderDate desc;
+```
 
 |Sales Ordre ID|Order Date|Total Due|
 |:---:|:---:|:---:|
