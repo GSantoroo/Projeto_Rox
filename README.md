@@ -19,7 +19,13 @@ Para resolução do modelo conceitual foi utilizado o BR modelo e desconsiderado
 
 # 2. Criação da infraestrutura necessária
 
-Para a parte de infraestrutura foi utilizado o banco de dados SQL server hospedado em nuvem (Azure). Para o manuseio do mesmo foi utilizado o Microsoft SQL Server Management Studio.
+Para a parte de infraestrutura foi utilizado o banco de dados SQL server hospedado em nuvem (Azure). Para o manuseio do mesmo foi utilizado o Microsoft SQL Server Management Studio. <br /> <br />
+Caso haja a necessidade de coneção com o Banco de dados será disponilibizado o usuario admin 
+
+**Server Name:** projeto-rox.database.windows.net <br />
+**Login:** Gustavo <br />
+**Password:** @Testerox <br />
+<br />
 
 ![image](https://user-images.githubusercontent.com/97460254/168407847-94845d44-fad2-4e32-b9d0-d838c72b89ac.png)
 <br />
@@ -136,20 +142,20 @@ order by sum(cast(sod.OrderQty as int)) desc;
 
 ```SQL
 select SalesOrderID, OrderDate, cast(replace(TotalDue, ',', '.') as float) as TotalDue from [Sales.SalesOrderHeader]
-where OrderDate between '20111001' and '20111030'
+where OrderDate between '2011-09-01' and '2011-10-01'
 and cast(replace(TotalDue, ',', '.') as float) >= 1000
 order by OrderDate desc;
 ```
 
 |Sales Ordre ID|Order Date|Total Due|
 |:---:|:---:|:---:|
-|44729|	2011-10-29 00:00:00.000|	3953,9884|
-|44730|	2011-10-29 00:00:00.000|	3953,9884|
-|44731|	2011-10-29 00:00:00.000|	3953,9884|
-|44732|	2011-10-29 00:00:00.000|	3953,9884|
-|44733|	2011-10-29 00:00:00.000|	3953,9884|
-|44722|	2011-10-28 00:00:00.000|	3953,9884|
-|44723|	2011-10-28 00:00:00.000|	3756,989|
-|44724|	2011-10-28 00:00:00.000|	3953,9884|
-|44725|	2011-10-28 00:00:00.000|	3756,989|
-|44727|	2011-10-28 00:00:00.000|	3953,9884|
+|44479|	2011-09-30 |00:00:00.000	|3729,364|
+|44480|	2011-09-30 |00:00:00.000	|3729,364|
+|44472|	2011-09-29 |00:00:00.000	|3953,9884|
+|44473|	2011-09-29 |00:00:00.000	|3953,9884|
+|44475|	2011-09-29 |00:00:00.000	|3756,989|
+|44476|	2011-09-29 |00:00:00.000	|3953,9884|
+|44477|	2011-09-29 |00:00:00.000	|3953,9884|
+|44478|	2011-09-29 |00:00:00.000	|3953,9884|
+|44462|	2011-09-28 |00:00:00.000	|3953,9884|
+|44464|	2011-09-28 |00:00:00.000	|3953,9884|
